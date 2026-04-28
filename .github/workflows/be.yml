@@ -1,0 +1,83 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - 'feat/**'
+      - 'refactor/**'
+      - 'fix/**'
+  pull_request:
+    branches:
+      - main
+      - dev
+      - 'feat/**'
+      - 'refactor/**'
+      - 'fix/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 20
+        uses: actions/setup-java@v4
+        with:
+          java-version: '20'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Run All Unit Tests
+        run: |
+          gradle_files=$(find . -maxdepth 3 -not -path '*/.*' \( -name "build.gradle" -o -name "build.gradle.kts" \))
+          
+          if [ -z "$gradle_files" ]; then
+            echo "No Gradle projects found yet. Skipping tests."
+            exit 0
+          fi
+
+          for file in $gradle_files; do
+            dir=$(dirname "$file")
+            echo "---------------------------------------------------"
+            echo "Running tests for microservice in: $dir"
+            echo "---------------------------------------------------"
+            
+            if [ -f "$dir/gradlew" ]; then
+              (cd "$dir" && chmod +x gradlew && ./gradlew test)
+            elif [ -f "./gradlew" ]; then
+              chmod +x ./gradlew
+              ./gradlew -p "$dir" test
+            else
+              (cd "$dir" && gradle test)
+            fi
+          done
+
+      - name: Build all Microservices
+        run: |
+          # Find all directories containing build.gradle or build.gradle.kts (excluding hidden folders)
+          gradle_files=$(find . -maxdepth 3 -not -path '*/.*' \( -name "build.gradle" -o -name "build.gradle.kts" \))
+          
+          if [ -z "$gradle_files" ]; then
+            echo "No Gradle projects found yet. CI passed."
+            exit 0
+          fi
+
+          for file in $gradle_files; do
+            dir=$(dirname "$file")
+            echo "---------------------------------------------------"
+            echo "Building microservice in: $dir"
+            echo "---------------------------------------------------"
+            
+            if [ -f "$dir/gradlew" ]; then
+              (cd "$dir" && chmod +x gradlew && ./gradlew build -x test)
+            elif [ -f "./gradlew" ]; then
+              chmod +x ./gradlew
+              ./gradlew -p "$dir" build -x test
+            else
+              (cd "$dir" && gradle build -x test)
+            fi
+          done
