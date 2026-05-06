@@ -1,0 +1,41 @@
+server:
+  port: 8000
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: api-gateway
+  codec:
+    max-in-memory-size: 50MB
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    gateway:
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            # TODO: thêm /api/v1 vào common để tái sử dụng
+            - RewritePath=/auth/(?<segment>.*), /api/v1/${segment}
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9000/eureka
+    registry-fetch-interval-seconds: 5
+    instance-info-replication-interval-seconds: 10
+  instance:
+    prefer-ip-address: true
+api-docs: /v3/api-docs
+springdoc:
+  api-docs:
+    enabled: true
+    path: ${api-docs}
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: auth
+        url: /auth${api-docs}

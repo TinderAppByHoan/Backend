@@ -1,0 +1,23 @@
+package com.capstone.common.request;
+
+import com.capstone.common.utils.SharedConstant;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class BaseFilterRequest {
+  @Schema(description = "Từ khóa tìm kiếm", example = "Nguyễn Văn A")
+  private String keyword;
+
+  @Schema(description = "Ngày bắt đầu lọc (dd-MM-yyyy)", example = "01-01-2023")
+  @Pattern(regexp = SharedConstant.DATE_PATTERN)
+  private String from;
+
+  @Schema(description = "Ngày kết thúc lọc (dd-MM-yyyy)", example = "31-12-2023")
+  @Pattern(regexp = SharedConstant.DATE_PATTERN)
+  private String to;
+}

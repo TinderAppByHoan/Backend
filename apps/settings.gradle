@@ -1,0 +1,15 @@
+
+// For more information about Spring boot multi-modules projects, go to: https://spring.io/guides/gs/multi-module/
+rootProject.name = 'apps'
+
+include 'notification'
+include 'customer'
+include 'device'
+include 'construction'
+include 'organization'
+include 'auth'
+include 'eureka'
+include 'image'
+include 'gateway'
+include 'common'
+// "nxCloudId": "692127ac7b3e9577e4f1c5b3",

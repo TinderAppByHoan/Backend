@@ -1,0 +1,96 @@
+package com.capstone.auth.application.business.profile;
+
+import com.capstone.auth.application.business.dto.ProfileDTO;
+import com.capstone.common.exception.NotFoundException;
+import com.capstone.auth.domain.model.Profile;
+import com.capstone.auth.infrastructure.persistence.ProfileRepository;
+import com.capstone.auth.infrastructure.service.KeycloakService;
+import com.capstone.common.utils.SharedConstant;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+import java.util.Optional;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class ProfileServiceImpl implements ProfileService {
+  ProfileRepository repo;
+  KeycloakService keycloakService;
+
+  @Override
+  public ProfileDTO getProfileById(String id) {
+    log.info("Getting profile by id: {}", id);
+    Objects.requireNonNull(id, "id cannot be null");
+    var profile = repo.findById(id);
+    return convertToResponse(profile);
+  }
+
+  @Override
+  public ProfileDTO getProfileByCredentials(String value) {
+    log.info("Getting profile by credentials: {}", value);
+    Objects.requireNonNull(value, "id cannot be null");
+    var profile = value.matches(SharedConstant.EMAIL_PATTERN) ? repo.findByUsersEmail(value) : repo.findByUsersUsername(value);
+    return convertToResponse(profile);
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public ProfileDTO updateProfile(Profile profile) {
+    log.info("Updating profile: {}", profile);
+    Objects.requireNonNull(profile, "Profile is null");
+    keycloakService.updateUserNames(profile.getProfileId(), profile.getFullname());
+    repo.save(profile);
+    return convertToResponse(Optional.of(profile));
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public ProfileDTO updateAvatar(String id, String avatar) {
+    log.info("Update avatar with id: {} and avatar url: {}", id, avatar);
+    repo.updateAvatarByProfileId(id, avatar);
+    return convertToResponse(repo.findById(id));
+  }
+
+  @Override
+  public String getAvatar(String id) {
+    log.info("Getting avatar with id: {}", id);
+    return repo.findAvatarUrlByProfileId(id);
+  }
+
+  @Override
+  public boolean existsByPhone(String phone) {
+    return repo.existsByPhoneNumber(phone);
+  }
+
+  @Override
+  public String getFullName(String id) {
+    var fullNames = keycloakService.getFullName(id);
+    return (fullNames.firstName() + " " + fullNames.lastName()).trim();
+  }
+
+  private @NonNull ProfileDTO convertToResponse(@NonNull Optional<Profile> profile) {
+    if (profile.isEmpty()) {
+      throw new NotFoundException("Profile does not exist");
+    }
+    var p = profile.get();
+    var userNames = keycloakService.getFullName(p.getProfileId());
+    var fullname = (userNames.firstName() + " " + userNames.lastName()).trim();
+    return new ProfileDTO(
+      profile.get().getProfileId(),
+      fullname,
+      p.getAvatarUrl(),
+      p.getAddress(),
+      p.getPhoneNumber(),
+      p.getGender(),
+      p.getBirthday()
+    );
+  }
+}
