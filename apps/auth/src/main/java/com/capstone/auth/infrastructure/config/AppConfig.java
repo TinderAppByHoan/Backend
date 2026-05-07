@@ -8,8 +8,6 @@ import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -22,11 +20,6 @@ import java.util.concurrent.Executor;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Import(SharedSecurityConfig.class)
 public class AppConfig {
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
-
   @Bean(name = "passwordEncoderExecutor")
   Executor passwordEncoderExecutor() {
     return new ThreadPoolTaskExecutorBuilder()

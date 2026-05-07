@@ -1,7 +1,7 @@
 package com.capstone.common.utils;
 
 import com.capstone.common.exception.InternalServerException;
-import com.capstone.common.response.WrapperApiResponse;
+import com.capstone.common.dto.response.WrapperApiResponse;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

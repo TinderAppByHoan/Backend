@@ -55,14 +55,6 @@ public class SharedSecurityConfig {
         roles.forEach(role -> allRoles.add(role.toString()));
       }
 
-      // @SuppressWarnings("unchecked")
-      // List<String> roles = (List<String>) realmAccess.get("roles");
-      // log.info("roles: {}", roles);
-      // if (roles == null || roles.isEmpty()) {
-      // throw new ForbiddenException();
-      // }
-
-      // return roles.stream()
       // 2. Extract Client Roles (Resource Access)
       Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
       if (resourceAccess != null) {

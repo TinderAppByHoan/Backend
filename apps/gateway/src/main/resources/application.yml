@@ -8,7 +8,14 @@ spring:
     name: api-gateway
   codec:
     max-in-memory-size: 50MB
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=5m
   cloud:
+    loadbalancer:
+      cache:
+        enabled: true
     compatibility-verifier:
       enabled: false
     gateway:

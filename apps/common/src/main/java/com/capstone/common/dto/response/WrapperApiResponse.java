@@ -1,4 +1,4 @@
-package com.capstone.common.response;
+package com.capstone.common.dto.response;
 
 import java.time.OffsetDateTime;
 

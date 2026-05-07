@@ -3,10 +3,20 @@ spring:
     name: auth
   profiles:
     active: dev
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=5m
+  cloud:
+    loadbalancer:
+      cache:
+        caffeine:
+          spec: initialCapacity=100,maximumSize=500,expireAfterWrite=5m
   jackson:
     time-zone: Asia/Ho_Chi_Minh
     locale: vi_VN
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: false
@@ -21,10 +31,10 @@ spring:
       connection-timeout: 2000 # Cho ket noi toi da 3s
       max-lifetime: 600000 # Ket noi song toi da 30p
       idle-timeout: 30000 # Dong idle sau 30s neu khong su dung
-rabbit-mq-config:
-  exchange_name:
-  queue_name:
-  routing_key:
+#rabbit-mq-config:
+#  exchange_name:
+#  queue_name:
+#  routing_key:
 management:
   health:
     rabbit:

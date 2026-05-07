@@ -3,7 +3,7 @@ package com.capstone.auth.application.exception;
 import com.capstone.common.exception.AccountBlockedException;
 import com.capstone.common.exception.IncompatibleAvatarException;
 import com.capstone.common.exception.NotFoundException;
-import com.capstone.common.response.WrapperApiResponse;
+import com.capstone.common.dto.response.WrapperApiResponse;
 import com.capstone.common.utils.Utils;
 import org.apache.coyote.BadRequestException;
 import org.jspecify.annotations.NonNull;

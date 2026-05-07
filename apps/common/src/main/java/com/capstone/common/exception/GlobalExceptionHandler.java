@@ -1,6 +1,6 @@
 package com.capstone.common.exception;
 
-import com.capstone.common.response.WrapperApiResponse;
+import com.capstone.common.dto.response.WrapperApiResponse;
 import com.capstone.common.utils.Utils;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +50,11 @@ public class GlobalExceptionHandler {
     return Utils.returnUnAuthorizedResponse("Invalid email or password", null);
   }
 
+  @ExceptionHandler(AccountBlockedException.class)
+  public ResponseEntity<WrapperApiResponse> handleAccountBlockedException(@NonNull AccountBlockedException ex) {
+    return Utils.returnUnAuthorizedResponse(ex.getMessage(), null);
+  }
+
   @ExceptionHandler(DisabledException.class)
   public ResponseEntity<WrapperApiResponse> handleDisabledException(@NonNull DisabledException ex) {
     return Utils.returnUnAuthorizedResponse(ex.getMessage(), null);
@@ -65,6 +70,11 @@ public class GlobalExceptionHandler {
     });
 
     return Utils.returnBadRequestResponse("Validation failed", errors);
+  }
+
+  @ExceptionHandler(IncompatibleAvatarException.class)
+  public ResponseEntity<WrapperApiResponse> handleIncompatibleAvatarException(@NonNull IncompatibleAvatarException ex) {
+    return Utils.returnBadRequestResponse(ex.getMessage(), null);
   }
 
   @ExceptionHandler(InternalServerException.class)

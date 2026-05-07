@@ -1,4 +1,4 @@
-package com.capstone.common.request;
+package com.capstone.common.dto.request;
 
 import com.capstone.common.utils.SharedConstant;
 import io.swagger.v3.oas.annotations.media.Schema;

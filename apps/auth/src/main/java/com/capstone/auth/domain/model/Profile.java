@@ -1,5 +1,7 @@
 package com.capstone.auth.domain.model;
 
+import com.capstone.common.model.BaseModel;
+import com.capstone.common.utils.SharedConstant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,8 +16,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "profile")
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Profile {
+public class Profile extends BaseModel {
   @Id
   String profileId;
 
@@ -33,6 +36,6 @@ public class Profile {
   String phoneNumber;
   Boolean gender;
 
-  @JsonFormat(pattern = "yyyy-MM-dd")
+  @JsonFormat(pattern = SharedConstant.DATE_PATTERN)
   LocalDate birthday;
 }

@@ -2,7 +2,7 @@ package com.capstone.common.config.feign;
 
 import com.capstone.common.exception.ForbiddenException;
 import com.capstone.common.exception.NotFoundException;
-import com.capstone.common.response.WrapperApiResponse;
+import com.capstone.common.dto.response.WrapperApiResponse;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;

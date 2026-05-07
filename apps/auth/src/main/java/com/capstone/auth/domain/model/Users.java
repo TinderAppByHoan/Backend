@@ -1,5 +1,6 @@
 package com.capstone.auth.domain.model;
 
+import com.capstone.common.model.BaseModel;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,8 +16,9 @@ import java.util.Collection;
 @AllArgsConstructor
 @Table(name = "users")
 @ToString(exclude = "role")
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Users {
+public class Users extends BaseModel {
   @Id
   String userId;
 
@@ -25,12 +27,6 @@ public class Users {
 
   @Column(unique = true, nullable = false)
   String username;
-
-//  @Column(nullable = false)
-//  LocalDateTime createdAt;
-//
-//  @Column(nullable = false)
-//  LocalDateTime updatedAt;
 
   @Column(nullable = false)
   Boolean isEnabled;
@@ -48,15 +44,4 @@ public class Users {
 
   @Transient
   Collection<? extends GrantedAuthority> authorities;
-
-//  @PrePersist
-//  void onCreate() {
-//    this.createdAt = LocalDateTime.now();
-//    this.updatedAt = this.createdAt;
-//  }
-//
-//  @PreUpdate
-//  void onUpdate() {
-//    this.updatedAt = LocalDateTime.now();
-//  }
 }
